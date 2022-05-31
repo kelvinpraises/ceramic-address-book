@@ -1,0 +1,41 @@
+{
+  "total_cnt": 2,
+  "contacts": [
+    {
+      "name": "zoe",
+      "wallets": [
+        {
+          "walletAddress": "0xD",
+          "network": "ethereum"
+        }
+      ],
+      "avatar": "http://example.com",
+      "tags": [],
+      "data": {}
+    },
+    {
+      "name": "rack",
+      "wallets": [
+        {
+          "walletAddress": "0xD]80",
+          "network": "ethereum"
+        }
+      ],
+      "avatar": "",
+      "tags": [],
+      "data": {}
+    },
+    {
+      "name": "tomi",
+      "wallets": [
+        {
+          "walletAddress": "0xD]80",
+          "network": "ethereum"
+        }
+      ],
+      "avatar": "",
+      "tags": ["run", "homw", "boys"],
+      "data": {}
+    }
+  ]
+}

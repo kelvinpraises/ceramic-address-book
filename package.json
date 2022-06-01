@@ -12,8 +12,10 @@
     "@3id/connect": "^0.4.1",
     "@ceramicnetwork/3id-did-resolver": "^2.0.4",
     "@ceramicnetwork/http-client": "^2.0.4",
+
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    
     "@glazed/datamodel": "^0.3.0",
     "@glazed/devtools": "^0.2.0",
     "@glazed/did-datastore": "^0.3.1",

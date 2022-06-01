@@ -17,6 +17,7 @@ export interface IContacts {
 }
 
 export interface IWallet {
-  walletsAddress: string;
+  walletAddress: string;
   network: string;
 }
+

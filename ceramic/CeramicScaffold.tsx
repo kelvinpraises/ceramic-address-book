@@ -133,9 +133,19 @@ export default function CeramicScaffold() {
   }, [getActivePane]);
 
   return (
-    <div className={styles.scaffoldContainer}>
-      {loading && <Loading />}
-      {ceramic ? main() : <InitConnect init={init} setLoading={setLoading} />}
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "#000000ba",
+        display: "grid",
+        placeItems: "center",
+      }}
+    >
+      <div className={styles.scaffoldContainer}>
+        {loading && <Loading />}
+        {ceramic ? main() : <InitConnect init={init} setLoading={setLoading} />}
+      </div>
     </div>
   );
 }

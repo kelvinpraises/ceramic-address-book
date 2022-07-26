@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to Ceramic Address Book Dashboard  👋</h1>
 
-This is an address book dashboard for managing wallet accounts on any platform built on Ceramic Network. This repo is the standalone dashboard, and contains experimental code, a stable version is being integrated into this [Superfluid Console](https://github.com/kelvinpraises/superfluid-console) fork.
+This is an address book dashboard for managing wallet accounts on any platform built on Ceramic Network. This repo is the standalone dashboard, and contains experimental code.
 
 - Link to demo video: [YouTube](https://youtu.be/1XaLCkuqueM)
 - Link to Superfluid Console integration: [GitHub](https://github.com/kelvinpraises/superfluid-ceramic-addressbook)

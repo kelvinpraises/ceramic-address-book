@@ -21,16 +21,17 @@
     "@glazed/datamodel": "^0.3.0",
     "@glazed/devtools": "^0.2.0",
     "@glazed/did-datastore": "^0.3.1",
-    "dids": "^3.1.0"
+    "dids": "^3.1.0",
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.9.2",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "react-scripts": "5.0.1",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.9.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,7 +1,6 @@
 {
   "name": "ceramic-address-book",
   "version": "1.0.0",
-  "private": true,
   "description": "A decentralized address book saved on Ceramic Network",
   "main": "dist/index.js",
   "repository": {

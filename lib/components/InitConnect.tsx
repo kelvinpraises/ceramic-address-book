@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { image } from "../constants";
-import logo from "./ceramic.svg";
+import logo from "../assets/ceramic.svg";
 
 const SInitConnect = styled.div`
   display: flex;

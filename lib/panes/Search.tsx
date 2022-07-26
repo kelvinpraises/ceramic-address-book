@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import SearchResults from "../components/SearchResults";
 import { aliases } from "../constants";
-import image from "../components/search.svg";
+import image from "../assets/search.svg";
 
 const SContainer = styled.div`
   display: flex;

@@ -11,11 +11,8 @@ This Project is for: [Create A Superfluid And AddressBook Ceramic Datamodel Inte
 
 ## How to use
 
-To install packages and start development server, run:
-
 ```sh
-yarn install
-yarn run dev
+ npm i ceramic-address-book 
 ```
 
 ## Technologies

@@ -1,14 +1,16 @@
-export interface ICeramicBook {
+/// <reference types="react-scripts" />
+
+interface ICeramicBook {
   total_cnt: number;
   contacts: IContacts[];
 }
 
-export interface IQuickInfo {
+interface IQuickInfo {
   ceramicWalletsCnt: number;
   unlinkedWalletsCnt: number;
 }
 
-export interface IContacts {
+interface IContacts {
   name: string;
   wallets: IWallet[];
   avatar: string;
@@ -16,8 +18,12 @@ export interface IContacts {
   data: {};
 }
 
-export interface IWallet {
+interface IWallet {
   walletAddress: string;
   network: string;
+}
+
+interface ILocalWallet extends IWallet {
+  name: string;
 }
 

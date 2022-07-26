@@ -1,22 +1,49 @@
+import { EthereumAuthProvider, ThreeIdConnect } from "@3id/connect";
+import { getResolver } from "@ceramicnetwork/3id-did-resolver";
+import { CeramicClient } from "@ceramicnetwork/http-client";
+import { DID } from "dids";
 import { useCallback, useEffect, useState } from "react";
-import { EthereumAuthProvider } from "../node_modules/@3id/connect/dist/index";
-import { ThreeIdConnect } from "../node_modules/@3id/connect/dist/threeIdConnect";
-import { getResolver } from "../node_modules/@ceramicnetwork/3id-did-resolver/lib/index";
-import { CeramicClient } from "../node_modules/@ceramicnetwork/http-client/lib/ceramic-http-client";
-import { DID } from "../node_modules/dids/lib/did";
+import styled from "@emotion/styled";
 
-import styles from "../styles/ceramic.module.css";
 import InitConnect from "./components/InitConnect";
 import Loading from "./components/Loading";
 import Nav from "./components/Nav";
-import AddressBook from "./pages/AddressBook";
-import Help from "./pages/Help";
-import Profile from "./pages/Profile";
-import Search from "./pages/Search";
+import { API_URL } from "./constants";
+import AddressBook from "./panes/AddressBook";
+import Help from "./panes/Help";
+import Profile from "./panes/Profile";
+import Search from "./panes/Search";
 
-const API_URL = "https://ceramic-clay.3boxlabs.com";
+const SScaffoldContainer = styled.div`
+  display: flex;
+  align-items: center;
+  background: #c5c5c5;
+  border-radius: 7px;
+  width: 100%;
+  max-width: 1000px;
+  position: relative;
+  height: 80vh;
+  
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  }
+`;
 
-export default function CeramicScaffold() {
+export default function CeramicAddressBook({
+  showCeramicModal,
+  setShowCeramicModal,
+  localWallets,
+}: {
+  showCeramicModal: any;
+  setShowCeramicModal: any;
+  localWallets: ILocalWallet[];
+}) {
   const [activeSelection, setActiveSelection] = useState("AddressBook");
   const [ethereum, setEthereum] = useState();
   const [ethAddress, setEthAddress] = useState();
@@ -88,36 +115,50 @@ export default function CeramicScaffold() {
         }
       })();
     }
-  }, []);
+  }, [setEthAddress]);
 
   // Retrieves the View Pane of the Users Active Selection.
   const getActivePane = useCallback(() => {
-    let pane: JSX.Element;
+    if (ceramic) {
+      let pane: JSX.Element;
 
-    switch (activeSelection) {
-      case "AddressBook":
-        pane = <AddressBook setLoading={setLoading} ceramic={ceramic} />;
-        break;
+      switch (activeSelection) {
+        case "AddressBook":
+          pane = (
+            <AddressBook
+              setLoading={setLoading}
+              ceramic={ceramic}
+              localWallets={localWallets}
+            />
+          );
+          break;
 
-      case "Search":
-        pane = <Search ceramic={ceramic} />;
-        break;
+        case "Search":
+          pane = <Search ceramic={ceramic} />;
+          break;
 
-      case "Profile":
-        pane = <Profile ceramic={ceramic} />;
-        break;
+        case "Profile":
+          pane = <Profile ceramic={ceramic} />;
+          break;
 
-      case "Help":
-        pane = <Help />;
-        break;
+        case "Help":
+          pane = <Help />;
+          break;
 
-      default:
-        pane = <AddressBook setLoading={setLoading} ceramic={ceramic} />;
-        break;
+        default:
+          pane = (
+            <AddressBook
+              setLoading={setLoading}
+              ceramic={ceramic}
+              localWallets={localWallets}
+            />
+          );
+          break;
+      }
+
+      return pane;
     }
-
-    return pane;
-  }, [activeSelection, ceramic, setLoading]);
+  }, [activeSelection, ceramic, setLoading, localWallets]);
 
   const main = useCallback(() => {
     return (
@@ -130,7 +171,11 @@ export default function CeramicScaffold() {
         {getActivePane()}
       </>
     );
-  }, [getActivePane]);
+  }, [getActivePane, activeSelection, setActiveSelection]);
+
+  if (!showCeramicModal) {
+    return null;
+  }
 
   return (
     <div
@@ -141,11 +186,12 @@ export default function CeramicScaffold() {
         display: "grid",
         placeItems: "center",
       }}
+      onClick={() => setShowCeramicModal(false)}
     >
-      <div className={styles.scaffoldContainer}>
+      <SScaffoldContainer onClick={(e) => e.stopPropagation()}>
         {loading && <Loading />}
         {ceramic ? main() : <InitConnect init={init} setLoading={setLoading} />}
-      </div>
+      </SScaffoldContainer>
     </div>
   );
 }

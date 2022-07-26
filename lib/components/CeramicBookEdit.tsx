@@ -1,11 +1,52 @@
+import { AddCircle, Delete } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
-import {
-  AddCircle,
-  Delete,
-  Save,
-} from "../../node_modules/@mui/icons-material/index";
-import styles from "../../styles/ceramic.module.css";
-import { ICeramicBook, IContacts } from "../types";
+import styled from '@emotion/styled';
+
+const SCeramicTileEditable = styled.li`
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: linear-gradient(
+    179.98deg,
+    #ffffff 0.02%,
+    rgba(255, 255, 255, 0.5) 101.57%
+  );
+  backdrop-filter: blur(40px);
+  border-radius: 7px;
+`;
+
+const SCeramicTileTextField = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+`;
+
+const SCeramicTileTextFieldW = styled.div`
+  border-radius: 7px;
+  border: 2px solid #a8a8a8;
+`;
+
+const SCeramicTileSave = styled.div`
+  display: grid;
+  place-items: center;
+  background-color: #058d8d;
+  color: #ffffff;
+  border-radius: 7px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const SCeramicTileDelete = styled.div`
+  display: grid;
+  place-items: center;
+  background-color: #eb5959;
+  color: #ffffff;
+  border-radius: 7px;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
 
 export default function CeramicBookEdit({
   contact,
@@ -26,34 +67,34 @@ export default function CeramicBookEdit({
   const [editableTag, setEditableTags] = useState<string>();
 
   useEffect(() => {
-    return () => {
-      if (contact !== null) {
-        setEditableName(contact.name);
-        setEditableAvatar(contact.avatar);
-        setEditableWallets([...contact.wallets]);
-        setEditableTags(
-          contact.tags?.length >= 1 ? contact.tags.join(", ") : ""
-        );
-      }
-    };
+    if (contact !== null) {
+      setEditableName(contact.name);
+      setEditableAvatar(contact.avatar);
+      setEditableWallets([...contact.wallets]);
+      setEditableTags(contact.tags?.length >= 1 ? contact.tags.join(", ") : "");
+    }
   }, [contact]);
 
   const addWallet = useCallback(() => {
-    const data = editableWallets;
-    data.push({ walletAddress: "", network: "" });
-    setEditableWallets([...data]);
+    if (editableWallets) {
+      const data = editableWallets;
+      data.push({ walletAddress: "", network: "" });
+      setEditableWallets([...data]);
+    }
   }, [editableWallets, setEditableWallets]);
 
   const updateWallet = useCallback(
-    ({ index, id, value }) => {
-      if (id === "wallet") {
-        const data = editableWallets;
-        data[index].walletAddress = value;
-        setEditableWallets([...data]);
-      } else if (id === "network") {
-        const data = editableWallets;
-        data[index].network = value;
-        setEditableWallets([...data]);
+    ({ index, id, value }: { index: number; id: string; value: any }) => {
+      if (editableWallets) {
+        if (id === "wallet") {
+          const data = editableWallets;
+          data[index].walletAddress = value;
+          setEditableWallets([...data]);
+        } else if (id === "network") {
+          const data = editableWallets;
+          data[index].network = value;
+          setEditableWallets([...data]);
+        }
       }
     },
     [editableWallets, setEditableWallets]
@@ -61,9 +102,11 @@ export default function CeramicBookEdit({
 
   const deleteWallet = useCallback(
     (index: number) => {
-      const data = editableWallets;
-      data.splice(index, 1);
-      setEditableWallets([...data]);
+      if (editableWallets) {
+        const data = editableWallets;
+        data.splice(index, 1);
+        setEditableWallets([...data]);
+      }
     },
     [editableWallets, setEditableWallets]
   );
@@ -77,14 +120,19 @@ export default function CeramicBookEdit({
       name: editableName,
       wallets: editableWallets,
       avatar: editableAvatar,
-      tags: editableTag?.length >= 1 ? editableTag?.split(", ") : [""],
+      tags:
+        editableTag && editableTag.length >= 1
+          ? editableTag?.split(", ")
+          : [""],
       data: {},
     };
-    contacts.splice(index, 1, contact);
+
+    (contacts as any).splice(index, 1, contact);
 
     data.contacts = contacts;
     setCeramicBook(data);
   }, [
+    index,
     ceramicBook,
     setCeramicBook,
     editableName,
@@ -102,16 +150,16 @@ export default function CeramicBookEdit({
 
     data.contacts = contacts;
     setCeramicBook(data);
-  }, [ceramicBook, setCeramicBook]);
+  }, [index, ceramicBook, setCeramicBook]);
 
   return (
-    <li className={styles.ceramicTileEditable}>
+    <SCeramicTileEditable>
       <div style={{ display: "flex" }}>
         <div style={{ flex: 1, marginBottom: "2rem" }}></div>
         {getButton()}
       </div>
 
-      <div className={styles.ceramicTileTextField}>
+      <SCeramicTileTextField>
         <label htmlFor="name">Name</label>
         <input
           type="text"
@@ -119,9 +167,9 @@ export default function CeramicBookEdit({
           value={editableName}
           onChange={(e) => setEditableName(e.target.value)}
         />
-      </div>
+      </SCeramicTileTextField>
 
-      <div className={styles.ceramicTileTextField}>
+      <SCeramicTileTextField>
         <label htmlFor="avatar">Image Url</label>
         <input
           type="text"
@@ -129,11 +177,11 @@ export default function CeramicBookEdit({
           value={editableAvatar}
           onChange={(e) => setEditableAvatar(e.target.value)}
         />
-      </div>
+      </SCeramicTileTextField>
 
-      <div className={styles.ceramicTileAddressField}>
+      <SCeramicTileTextField>
         <label htmlFor="wallet">Wallets</label>
-        <div className={styles.ceramicTilesAddressFeild_wrapper}>
+        <SCeramicTileTextFieldW>
           <div
             style={{
               display: "flex",
@@ -195,10 +243,10 @@ export default function CeramicBookEdit({
           <div style={{ margin: ".5rem" }}>
             <AddCircle onClick={() => addWallet()} />
           </div>
-        </div>
-      </div>
+        </SCeramicTileTextFieldW>
+      </SCeramicTileTextField>
 
-      <div className={styles.ceramicTileTextField}>
+      <SCeramicTileTextField>
         <label htmlFor="tags">Tags</label>
         <input
           type="text"
@@ -206,14 +254,14 @@ export default function CeramicBookEdit({
           value={editableTag}
           onChange={(e) => setEditableTags(e.target.value)}
         />
-      </div>
+      </SCeramicTileTextField>
 
-      <div onClick={() => saveContact()} className={styles.ceramicTileSave}>
+      <SCeramicTileSave onClick={() => saveContact()}>
         Save Edit
-      </div>
-      <div onClick={() => deleteContact()} className={styles.ceramicTileDelete}>
+      </SCeramicTileSave>
+      <SCeramicTileDelete onClick={() => deleteContact()}>
         Hold to Delete Address
-      </div>
-    </li>
+      </SCeramicTileDelete>
+    </SCeramicTileEditable>
   );
 }

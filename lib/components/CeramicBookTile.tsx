@@ -1,12 +1,70 @@
+import { Clear, Edit, Lock } from "@mui/icons-material";
 import { useCallback, useEffect, useState } from "react";
-import {
-  Clear,
-  Edit,
-  Lock,
-} from "../../node_modules/@mui/icons-material/index";
-import styles from "../../styles/ceramic.module.css";
-import { ICeramicBook, IContacts } from "../types";
+import styled from "@emotion/styled";
+import ellipsisAddress from "../utils/ellipsisAddress";
 import CeramicBookEdit from "./CeramicBookEdit";
+
+interface ISAccordion {
+  opened: boolean;
+}
+
+const SAccordionItemInner = styled.div<ISAccordion>`
+  max-height: 0;
+  overflow: hidden;
+  text-transform: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+  transition-duration: 0.6s;
+  transition-property: max-height;
+  z-index: 1;
+  position: relative;
+
+  ${({ opened }) => {
+    if (opened) {
+      return `
+      max-height: 300rem;
+      height: auto;
+      transition-timing-function: cubic-bezier(0.895, 0.03, 0.685, 0.22);
+      transition-duration: 0.5s;
+      transition-property: max-height;  
+      `;
+    }
+  }}
+`;
+
+const SAccordionItemContent = styled.div<ISAccordion>`
+  opacity: 0;
+  transform: translateY(-1rem);
+  transition-timing-function: linear, ease;
+  transition-duration: 0.5s;
+  transition-property: opacity, transform;
+
+  ${({ opened }) => {
+    if (opened) {
+      return `
+      opacity: 1;
+      transform: translateY(0);
+      transition-timing-function: ease-in-out;
+      transition-property: opacity, transform;
+      `;
+    }
+  }}
+`;
+
+const SAccordionWallet = styled.div`
+  border-radius: 7px;
+  border: 2px solid #a8a8a8;
+`;
+
+const SAccordion = styled.li`
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: linear-gradient(
+    179.98deg,
+    #ffffff 0.02%,
+    rgba(255, 255, 255, 0.5) 101.57%
+  );
+  backdrop-filter: blur(40px);
+  border-radius: 7px;
+`;
 
 export default function CeramicBookTile({
   editing,
@@ -34,14 +92,12 @@ export default function CeramicBookTile({
 
   // Loads data from the contact object into state.
   useEffect(() => {
-    return () => {
-      if (contact !== null) {
-        setName(contact.name);
-        setAvatar(contact.avatar);
-        setWallets([...contact.wallets]);
-        setTags(contact.tags);
-      }
-    };
+    if (contact !== null) {
+      setName(contact.name);
+      setAvatar(contact.avatar);
+      setWallets([...contact.wallets]);
+      setTags(contact.tags);
+    }
   }, [contact]);
 
   // Set the component to non editable when another is editing.
@@ -141,7 +197,7 @@ export default function CeramicBookTile({
   }
 
   return (
-    <li className={opened ? styles.accordionItemOpened : styles.accordionItem}>
+    <SAccordion>
       <div onClick={() => setOpened(!opened)}>
         <div
           style={{
@@ -149,7 +205,11 @@ export default function CeramicBookTile({
             alignItems: "start",
           }}
         >
-          {svgNoImg}
+          {avatar ? (
+            <img width={100} src={avatar} alt={"image of" + name} />
+          ) : (
+            svgNoImg
+          )}
           <div>
             <h3 style={{ margin: "0", marginLeft: "0.5rem" }}>{name}</h3>
           </div>
@@ -157,11 +217,11 @@ export default function CeramicBookTile({
           {getButton()}
         </div>
       </div>
-      <div className={styles.accordionItemInner}>
-        <div className={styles.accordionItemContent}>
+      <SAccordionItemInner opened={opened}>
+        <SAccordionItemContent opened={opened}>
           <div>
             <h3>Wallets</h3>
-            <div className={styles.accordionWallet}>
+            <SAccordionWallet>
               <div
                 style={{
                   display: "flex",
@@ -193,9 +253,10 @@ export default function CeramicBookTile({
                 </p>
               </div>
               <div>
-                {wallets?.map(({ walletAddress, network }) => {
+                {wallets?.map(({ walletAddress, network }, index) => {
                   return (
                     <div
+                      key={walletAddress + index}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -205,21 +266,22 @@ export default function CeramicBookTile({
                       }}
                     >
                       <p style={{ width: "20ch", margin: 0 }}>
-                        {walletAddress}
+                        {ellipsisAddress(walletAddress)}
                       </p>
                       <p style={{ width: "14ch", margin: 0 }}>{network}</p>
                     </div>
                   );
                 })}
               </div>
-            </div>
+            </SAccordionWallet>
           </div>
           <div>
             <h3>Tags</h3>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
-              {tags?.length >= 1 ? (
-                tags.map((tag) => (
+              {tags && tags.length >= 1 ? (
+                tags.map((tag, index) => (
                   <div
+                    key={tag + index}
                     style={{
                       background: "#D9D9D9",
                       borderRadius: "23px",
@@ -235,8 +297,8 @@ export default function CeramicBookTile({
               )}
             </div>
           </div>
-        </div>
-      </div>
-    </li>
+        </SAccordionItemContent>
+      </SAccordionItemInner>
+    </SAccordion>
   );
 }
